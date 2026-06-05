@@ -8,7 +8,7 @@ Built for use with [paperless-ngx](https://github.com/paperless-ngx/paperless-ng
 
 ## Why this exists
 
-Proton Mail Bridge has no official ARM64 Docker image. Community images exist but are unmaintained. This repo builds directly from the official Proton Bridge source on every push, so it always tracks the latest upstream code.
+Proton Mail Bridge has no official ARM64 Docker image. Community images exist but are unmaintained. This repo builds directly from the official Proton Bridge source and tracks the latest upstream release tag in CI.
 
 ---
 
@@ -122,7 +122,7 @@ In the paperless-ngx admin UI under **Mail Accounts**, configure:
 
 ## Updating the image
 
-Whenever you want to pick up a newer version of Proton Bridge upstream, just push a commit to `main` (even a README change). GitHub Actions will rebuild from the latest source and push a new `latest` tag to GHCR.
+Whenever you want to pick up a newer version of Proton Bridge upstream, just push a commit to `main` (even a README change). GitHub Actions will rebuild from the latest upstream release tag and push a new `latest` tag to GHCR.
 
 On the Pi, pull and restart:
 
@@ -171,7 +171,7 @@ docker run --rm -it \
 
 ## How it's built
 
-- Source: official [ProtonMail/proton-bridge](https://github.com/ProtonMail/proton-bridge) repository, cloned fresh on every build
+- Source: official [ProtonMail/proton-bridge](https://github.com/ProtonMail/proton-bridge) repository, cloned at the latest upstream release tag in CI (or `master` for local builds without `BRIDGE_VERSION`)
 - Build target: `make build-nogui` — compiles the bridge without any Qt/GUI dependencies
 - One patch applied at build time: `internal/constants/constants.go` is modified to bind on `0.0.0.0` instead of `127.0.0.1`, so the bridge is reachable from other containers
 - Multi-stage build: Go toolchain and source are discarded, only the compiled binary + runtime libs end up in the final image

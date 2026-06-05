@@ -1,6 +1,8 @@
 # ─── Stage 1: Build ───────────────────────────────────────────────────────────
 FROM golang:1.24-bookworm AS builder
 
+ARG BRIDGE_VERSION=master
+
 RUN apt-get update && apt-get install -y \
     git make \
     libsecret-1-dev \
@@ -10,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone --depth=1 https://github.com/ProtonMail/proton-bridge.git /build
+RUN git clone --depth=1 --branch="${BRIDGE_VERSION}" https://github.com/ProtonMail/proton-bridge.git /build
 WORKDIR /build
 
 # Critical: patch bridge to listen on 0.0.0.0 instead of 127.0.0.1
