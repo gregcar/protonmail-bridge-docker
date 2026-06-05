@@ -1,5 +1,8 @@
 # ─── Stage 1: Build ───────────────────────────────────────────────────────────
-FROM golang:latest AS builder
+ARG BUILDPLATFORM
+ARG TARGETPLATFORM
+FROM --platform=$BUILDPLATFORM golang:1.24-bookworm AS builder
+ARG TARGETPLATFORM
 
 RUN apt-get update && apt-get install -y \
     git make \
@@ -17,10 +20,15 @@ WORKDIR /build
 # Without this, no other container can reach the IMAP/SMTP ports
 RUN sed -i 's/127\.0\.0\.1/0.0.0.0/g' internal/constants/constants.go
 
-RUN make build-nogui
+RUN case "$TARGETPLATFORM" in \
+            "linux/amd64") GOARCH=amd64 ;; \
+            "linux/arm64") GOARCH=arm64 ;; \
+            *) echo "Unsupported TARGETPLATFORM: $TARGETPLATFORM" && exit 1 ;; \
+        esac \
+        && GOARCH="$GOARCH" make build-nogui
 
 # ─── Stage 2: Runtime ─────────────────────────────────────────────────────────
-FROM debian:bookworm-slim
+FROM --platform=$TARGETPLATFORM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y \
     libsecret-1-0 \
