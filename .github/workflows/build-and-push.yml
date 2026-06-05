@@ -51,6 +51,7 @@ jobs:
         run: |
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
             -H "Authorization: Bearer $TOKEN" \
+            -H "Accept: application/vnd.oci.image.index.v1+json, application/vnd.docker.distribution.manifest.list.v2+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json" \
             "https://ghcr.io/v2/$IMAGE_NAME/manifests/$VERSION")
           if [ "$STATUS" = "200" ]; then
             echo "exists=true" >> $GITHUB_OUTPUT
@@ -61,7 +62,7 @@ jobs:
           fi
 
       - name: Extract metadata (tags + labels)
-        if: steps.check.outputs.exists == 'false' || github.event_name == 'push'
+        if: steps.check.outputs.exists == 'false'
         id: meta
         uses: docker/metadata-action@v5
         with:
@@ -72,7 +73,7 @@ jobs:
             type=sha,prefix=sha-
 
       - name: Build and push
-        if: steps.check.outputs.exists == 'false' || github.event_name == 'push'
+        if: steps.check.outputs.exists == 'false'
         uses: docker/build-push-action@v5
         with:
           context: .
