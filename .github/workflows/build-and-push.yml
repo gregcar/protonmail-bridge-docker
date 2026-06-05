@@ -39,12 +39,13 @@ jobs:
 
       - name: Check if version already exists in GHCR
         id: check
+        env:
+          VERSION: ${{ steps.version.outputs.tag }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION=${{ steps.version.outputs.tag }}
-          TOKEN=$(echo ${{ secrets.GITHUB_TOKEN }} | base64)
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
             -H "Authorization: Bearer $TOKEN" \
-            https://ghcr.io/v2/${{ env.IMAGE_NAME }}/manifests/$VERSION)
+            "https://ghcr.io/v2/$IMAGE_NAME/manifests/$VERSION")
           if [ "$STATUS" = "200" ]; then
             echo "exists=true" >> $GITHUB_OUTPUT
             echo "Version $VERSION already built, skipping."
