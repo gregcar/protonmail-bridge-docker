@@ -3,7 +3,9 @@ name: Build and Push arm64 image
 on:
   push:
     branches: [ "main" ]
-  workflow_dispatch:          # allows manual trigger from the GitHub UI
+  schedule:
+    - cron: '0 3 * * 1'   # every Monday at 03:00 UTC
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
