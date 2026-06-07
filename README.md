@@ -55,6 +55,19 @@ docker run --rm -it \
   ghcr.io/YOURUSER/protonmail-bridge-docker:latest init
 ```
 
+If you use Docker Compose for `init`, make sure a TTY is allocated or Bridge will exit with `EOF`:
+
+```bash
+docker compose run --rm --service-ports -it protonmail-bridge init
+```
+
+If your Compose plugin does not support `-it` on `run`, add this to the service:
+
+```yaml
+stdin_open: true
+tty: true
+```
+
 This drops you into the Proton Bridge interactive CLI. Run:
 
 ```
@@ -166,6 +179,10 @@ docker run --rm -it \
   -v protonmail-data:/root \
   ghcr.io/YOURUSER/protonmail-bridge-docker:latest init
 ```
+
+**"Unable to use a TTY" or immediate `EOF` in init mode**
+- Cause: `init` was started without an interactive TTY.
+- Fix: run with `-it` (`docker run` or `docker compose run`) or set `stdin_open: true` and `tty: true` in Compose.
 
 ---
 

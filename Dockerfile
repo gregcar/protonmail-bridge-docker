@@ -15,9 +15,6 @@ RUN apt-get update && apt-get install -y \
 RUN git clone --depth=1 --branch="${BRIDGE_VERSION}" https://github.com/ProtonMail/proton-bridge.git /build
 WORKDIR /build
 
-# Disable version check that times out in containers
-RUN sed -i 's/CheckVersion()/\/\/ CheckVersion() - disabled in container/g' internal/bridge/bridge.go || true
-
 # Critical: patch bridge to listen on 0.0.0.0 instead of 127.0.0.1
 # Without this, no other container can reach the IMAP/SMTP ports
 RUN sed -i 's/127\.0\.0\.1/0.0.0.0/g' internal/constants/constants.go
