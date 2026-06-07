@@ -36,7 +36,7 @@ You only need to re-run the login (`init`) if you:
 ### 1. Pull the image
 
 ```bash
-docker pull ghcr.io/YOURUSER/protonmail-bridge-docker:latest
+docker pull ghcr.io/YOURREPO/protonmail-bridge-docker:latest
 ```
 
 If the package is private, log in to GHCR first (one-time):
@@ -52,7 +52,7 @@ Create a PAT at: GitHub → Settings → Developer settings → Personal access 
 ```bash
 docker run --rm -it \
   -v protonmail-data:/root \
-  ghcr.io/YOURUSER/protonmail-bridge-docker:latest init
+  ghcr.io/YOURREPO/protonmail-bridge-docker:latest init
 ```
 
 If you use Docker Compose for `init`, make sure a TTY is allocated or Bridge will exit with `EOF`:
@@ -94,7 +94,7 @@ Follow the prompts (email, password, 2FA if enabled). When done:
 services:
 
   protonmail-bridge:
-    image: ghcr.io/domisko/protonmail-bridge-docker:latest
+    image: ghcr.io/YOURREPO/protonmail-bridge-docker:latest
     container_name: protonmail-bridge
     restart: unless-stopped
     volumes:
@@ -153,7 +153,7 @@ Your credentials in the volume are untouched by updates.
 If you want to build directly on the Pi instead of pulling from GHCR:
 
 ```bash
-git clone https://github.com/YOURUSER/protonmail-bridge-docker.git
+git clone https://github.com/YOURREPO/protonmail-bridge-docker.git
 cd protonmail-bridge-docker
 docker build -t protonmail-bridge:local .
 ```
@@ -177,7 +177,7 @@ Check the logs: `docker logs protonmail-bridge`. Most commonly caused by a missi
 ```bash
 docker run --rm -it \
   -v protonmail-data:/root \
-  ghcr.io/YOURUSER/protonmail-bridge-docker:latest init
+  ghcr.io/YOURREPO/protonmail-bridge-docker:latest init
 ```
 
 **"Unable to use a TTY" or immediate `EOF` in init mode**
