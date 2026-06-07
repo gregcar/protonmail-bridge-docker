@@ -45,4 +45,3 @@ fi
 # ── Normal daemon mode ─────────────────────────────────────────────────────────
 echo "[bridge] Starting Proton Mail Bridge daemon..."
 exec /protonmail/bridge --noninteractive
-EOF

@@ -25,6 +25,7 @@ RUN make build-nogui
 FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y \
+    ca-certificates \
     libsecret-1-0 \
     libglib2.0-0 \
     pass \
